@@ -4,8 +4,8 @@ import Modelo.ClienteDTO;
 import Modelo.CocheDTO;
 import Modelo.VentaDTO;
 import Vista.VistaSimple;
+import Modelo.TOpciones;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,17 +17,11 @@ public class ConcesionarioControlador {
     List<ClienteDTO> listadoClientes;
     List<VentaDTO> listadoVentas;
 
-    enum opcionesEnum {
-        ANHADIR_COCHE, MOSTRAR_COCHES, BUSCAR, REGISTRAR_CLIENTE, REGISTRAR_VENTA, LISTAR_VENTAS
-    }
 
     public void run() {
         int op;
         while (true) {
-
-
-
-
+            vista.mostrarMenu();
 
 
         }
@@ -45,10 +39,13 @@ public class ConcesionarioControlador {
 
     public ConcesionarioControlador(VistaSimple vista) {
         this.vista = vista;
-        this.listadoCoches = cargarCoches();
+        this.listadoCoches = cargaCoches();
+        this.listadoClientes = cargarClientes();
+
     }
 
-    private List<CocheDTO> cargarCoches() {
+
+    private List<CocheDTO> cargaCoches() {
         List<CocheDTO> listadoCoches = new ArrayList<>();
         listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "1088 BDG", 1365.0f, new Date(100, 01, 01), 186000.0f));
         listadoCoches.add(new CocheDTO("Toyota", "Corolla", "1234 ABC", 18500.00f, new Date(118, 4, 15), 45000.0f));
@@ -58,6 +55,13 @@ public class ConcesionarioControlador {
 
         return listadoCoches;
 
+    }
+
+    private List<ClienteDTO> cargarClientes() {
+        List<ClienteDTO> listadoClientes = new ArrayList<>();
+        listadoClientes.add(new ClienteDTO("1111111A", "Pedro González Vázquez", 894586210));
+        listadoClientes.add(new ClienteDTO("22222222B", "Iván Fernández López", 567154960));
+        return listadoClientes;
     }
 
 }
