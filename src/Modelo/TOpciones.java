@@ -7,9 +7,12 @@ public enum TOpciones {
     MOSTRAR_COCHES("Mostrar el listado de coches disponibles."),
     BUSCAR("Buscar un coche por marca, año o rango de precios."),
     REGISTRAR_CLIENTE("Registrar un uevo cliente."),
+    LISTAR_CLIENTES("Mostrar el listado de clientes registrados."),
     REGISTRAR_VENTA("Registrar una nueva venta."),
     LISTAR_VENTAS("Mostrar las ventas."),
+
     SALIR("Salir del programa.");
+
 
 
     private String opText;

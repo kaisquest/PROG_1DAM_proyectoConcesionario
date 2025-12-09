@@ -1,10 +1,7 @@
 package Controlador;
 
-import Modelo.ClienteDTO;
-import Modelo.CocheDTO;
-import Modelo.VentaDTO;
+import Modelo.*;
 import Vista.VistaSimple;
-import Modelo.TOpciones;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,30 +9,195 @@ import java.util.List;
 
 public class ConcesionarioControlador {
 
+    public static final int CNT_ORIGIN = 0;
     private VistaSimple vista;
+    private int cnt = CNT_ORIGIN;
     List<CocheDTO> listadoCoches;
     List<ClienteDTO> listadoClientes;
     List<VentaDTO> listadoVentas;
 
 
     public void run() {
-        int op;
+        vista.imprimirMensaje("\n" + "Bienvenido al programa de gestión concesionario.", TColores.GREEN);
         while (true) {
-            vista.mostrarMenu();
+            TOpciones opciones = vista.mostrarMenu();
+            if (opciones == TOpciones.ANHADIR_COCHE) {
+                try {
+                    CocheDTO nuevoCoche = vista.anhadirCoche();
+                    anhadirUnCoche(nuevoCoche);
+                    vista.pulsaParaContinuar();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
+            }
+            if (opciones == TOpciones.BUSCAR) {
+
+                while (true) {
+                    TOpcionesMenu opcionesMenu = vista.menuOpcionesBusqueda();
+                    if (opcionesMenu == TOpcionesMenu.MARCA) {
+                        mostrarCoches(busquedaMarca(vista.pedirCadena("Introduce la marca de coche.")));
+                        vista.menuOpcionesBusqueda();
+
+                    }
+                    if (opcionesMenu == TOpcionesMenu.RANGO) {
+                        mostrarCoches(busquedaRangoPrecio(vista.pedirFloat("Introduce un precio en €.")));
+                    }
+                    if (opcionesMenu == TOpcionesMenu.ANHO) {
+                        mostrarCoches(busquedaAnho(vista.pedirAnhoFecha("Introduce el año del coche.")));
+                    }
+                    if (opcionesMenu == TOpcionesMenu.SALIR) {
+                        break;
+
+                    }
+                }
+            }
+            if (opciones == TOpciones.LISTAR_VENTAS) {
+                mostrarVentas(listadoVentas);
+                vista.pulsaParaContinuar();
+
+            }
+            if (opciones == TOpciones.MOSTRAR_COCHES) {
+                mostrarCoches(listadoCoches);
+                vista.pulsaParaContinuar();
+            }
+            if (opciones == TOpciones.REGISTRAR_CLIENTE) {
+                ClienteDTO nuevoCliente = vista.registrarCliente();
+                if (comprobarDni(nuevoCliente)) {
+                    vista.imprimirMensaje("El cliente ya existe en la base de datos.", TColores.RED);
+                } else {
+                    registrarUnCliente(nuevoCliente);
+                    vista.pulsaParaContinuar();
+                }
+
+            }
+            if (opciones == TOpciones.REGISTRAR_VENTA) {
+
+
+            }
+
+            if (opciones == TOpciones.LISTAR_CLIENTES) {
+                mostrarClientes(listadoClientes);
+                vista.pulsaParaContinuar();
+            }
+            if (opciones == TOpciones.SALIR) {
+                vista.mensajeSalida();
+                break;
+            }
 
         }
 
-
     }
 
-    public void mostrarCoches() {
+
+    public List<CocheDTO> busquedaRangoPrecio(float rangoPrecio) {
+
+        List<CocheDTO> listadoOcurrencias = new ArrayList<>();
+        cnt = CNT_ORIGIN;
         for (CocheDTO coche : listadoCoches) {
-            vista.mostrarCoche(coche);
+            if (rangoPrecio >= coche.getPrecio()) {
+                listadoOcurrencias.add(coche);
+                cnt ++;
+            }
+
+        }
+        if (cnt == CNT_ORIGIN) {
+            return null;
+        } else {
+            return listadoOcurrencias;
+        }
+
+
+    }
+
+    public List<CocheDTO> busquedaAnho(int anhoBusqueda) {
+        List<CocheDTO> listadoOcurrencias = new ArrayList<>();
+        cnt = CNT_ORIGIN;
+        for (CocheDTO coche : listadoCoches) {
+            if (coche.getAnho().getYear() == anhoBusqueda) {
+                listadoOcurrencias.add(coche);
+                cnt++;
+            }
+
+        }
+        if (cnt == CNT_ORIGIN) {
+            return null;
+        } else {
+            return listadoOcurrencias;
+        }
+
+    }
+
+    public List<CocheDTO> busquedaMarca(String marcaBusqueda) {
+        List<CocheDTO> listadoOcurrencias = new ArrayList<>();
+        cnt = CNT_ORIGIN;
+        for (CocheDTO coche : listadoCoches) {
+            if (coche.getMarca().equals(marcaBusqueda)) {
+                listadoOcurrencias.add(coche);
+                cnt++;
+            }
+
+        }
+        if (cnt == CNT_ORIGIN) {
+            return null;
+        } else {
+            return listadoOcurrencias;
+        }
+
+    }
+
+    public void mostrarCoches(List<CocheDTO> lista) {
+        if (lista == null) {
+            vista.imprimirMensaje("No existen coches registrados", TColores.RED);
+        } else {
+            for (CocheDTO coche : lista) {
+                vista.mostrarCoche(coche);
+
+            }
+        }
+    }
+
+    public void mostrarVentas(List<VentaDTO> lista) {
+        if (lista == null) {
+            vista.imprimirMensaje("No existen ventas registradas", TColores.RED);
+        } else {
+            for (VentaDTO venta : lista) {
+                vista.mostrarVenta(venta);
+            }
 
         }
     }
 
+    public void mostrarClientes(List<ClienteDTO> lista) {
+        if (lista == null) {
+            vista.imprimirMensaje("No existen ventas registradas", TColores.RED);
+        } else {
+            for (ClienteDTO cliente : lista) {
+                vista.mostrarCliente(cliente);
+            }
+        }
+    }
+
+    public void anhadirUnCoche(CocheDTO nuevoCoche) {
+        listadoCoches.add(nuevoCoche);
+
+
+    }
+
+    public void registrarUnCliente(ClienteDTO nuevoCliente) {
+        listadoClientes.add(nuevoCliente);
+
+    }
+
+    public boolean comprobarDni(ClienteDTO clienteAComprobar) {
+        for (ClienteDTO cliente : listadoClientes) {
+            if (cliente.getDni().equals(clienteAComprobar.getDni())) {
+                return true;
+            }
+
+        }
+        return false;
+    }
 
     public ConcesionarioControlador(VistaSimple vista) {
         this.vista = vista;
@@ -44,14 +206,14 @@ public class ConcesionarioControlador {
 
     }
 
-
     private List<CocheDTO> cargaCoches() {
         List<CocheDTO> listadoCoches = new ArrayList<>();
         listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "1088 BDG", 1365.0f, new Date(100, 01, 01), 186000.0f));
         listadoCoches.add(new CocheDTO("Toyota", "Corolla", "1234 ABC", 18500.00f, new Date(118, 4, 15), 45000.0f));
-        listadoCoches.add(new CocheDTO("BMW", "Serie 3", "5678 XYZ", 32500.00f, new Date(121, 8, 10), 15000.0f));
-        listadoCoches.add(new CocheDTO("Volkswagen", "Tiguan", "9012 DEF", 28900.0f, new Date(119, 11, 20), 32000.0f));
-        listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "GHI3456", 12500.00f, new Date(116, 1, 5), 68000.0f));
+        listadoCoches.add(new CocheDTO("BMW", "Serie 3", "5678 XYZ", 32500.00f, new Date(121, 8, 10), 0000.0f));
+        listadoCoches.add(new CocheDTO("Volkswagen", "Tiguan", "9012 DEF", 28900.0f, new Date(119, 11, 20), 2000.0f));
+        listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "3456 GHI", 12500.00f, new Date(116, 1, 5), 68000.0f));
+        listadoCoches.add(new CocheDTO("Suzuki", "Swift", "0501 SW", 1500.0f, new Date(98, 01, 01), 186000.0f));
 
         return listadoCoches;
 
