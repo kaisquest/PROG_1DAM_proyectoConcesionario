@@ -9,12 +9,15 @@ import java.util.List;
 
 public class ConcesionarioControlador {
 
-    public static final int CNT_ORIGIN = 0;
+    private static final int CNT_ORIGIN = 0;
+    public static final float IVA = 1.21f;
+    public static final float COMISION_VENTA = 0.0f;
     private VistaSimple vista;
     private int cnt = CNT_ORIGIN;
     List<CocheDTO> listadoCoches;
     List<ClienteDTO> listadoClientes;
     List<VentaDTO> listadoVentas;
+    int contadorVentas = 0;
 
 
     public void run() {
@@ -72,6 +75,15 @@ public class ConcesionarioControlador {
 
             }
             if (opciones == TOpciones.REGISTRAR_VENTA) {
+                if (listadoVentas == null) {
+                    this.listadoVentas = cargarVentas();
+                }
+                vista.imprimirMensaje("Por favor, introduce los datos de la venta", TColores.GREEN);
+                contadorVentas++;
+                VentaDTO nuevaVenta = vista.registrarVenta((contadorVentas), busquedaCliente(vista.pedirCadena("Introduce el DNI del cliente.")),
+                        busquedaMatricula(vista.pedirCadena("Introduce la matrícula del coche")),
+                        calcularTotal(vista.pedirFloat("Introduce el precio de venta")));
+                registrarVenta(nuevaVenta);
 
 
             }
@@ -89,6 +101,39 @@ public class ConcesionarioControlador {
 
     }
 
+    private float calcularTotal(float precioInicial) {
+
+        return (precioInicial * IVA) + COMISION_VENTA;
+
+    }
+
+    public CocheDTO busquedaMatricula(String matricula) {
+
+        for (CocheDTO coche : listadoCoches) {
+            if (coche.getMatricula().equals(matricula)) {
+                return coche;
+            }
+
+        }
+
+        return null;
+
+
+    }
+
+    public ClienteDTO busquedaCliente(String dni) {
+
+        for (ClienteDTO cliente : listadoClientes) {
+            if (cliente.getDni().equals(dni)) {
+                return cliente;
+            }
+
+        }
+
+        return null;
+
+
+    }
 
     public List<CocheDTO> busquedaRangoPrecio(float rangoPrecio) {
 
@@ -97,7 +142,7 @@ public class ConcesionarioControlador {
         for (CocheDTO coche : listadoCoches) {
             if (rangoPrecio >= coche.getPrecio()) {
                 listadoOcurrencias.add(coche);
-                cnt ++;
+                cnt++;
             }
 
         }
@@ -178,6 +223,11 @@ public class ConcesionarioControlador {
         }
     }
 
+    public void registrarVenta(VentaDTO venta) {
+        listadoVentas.add(venta);
+
+    }
+
     public void anhadirUnCoche(CocheDTO nuevoCoche) {
         listadoCoches.add(nuevoCoche);
 
@@ -204,11 +254,12 @@ public class ConcesionarioControlador {
         this.listadoCoches = cargaCoches();
         this.listadoClientes = cargarClientes();
 
+
     }
 
     private List<CocheDTO> cargaCoches() {
         List<CocheDTO> listadoCoches = new ArrayList<>();
-        listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "1088 BDG", 1365.0f, new Date(100, 01, 01), 186000.0f));
+        listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "1078 BDG", 1365.0f, new Date(100, 01, 01), 186000.0f));
         listadoCoches.add(new CocheDTO("Toyota", "Corolla", "1234 ABC", 18500.00f, new Date(118, 4, 15), 45000.0f));
         listadoCoches.add(new CocheDTO("BMW", "Serie 3", "5678 XYZ", 32500.00f, new Date(121, 8, 10), 0000.0f));
         listadoCoches.add(new CocheDTO("Volkswagen", "Tiguan", "9012 DEF", 28900.0f, new Date(119, 11, 20), 2000.0f));
@@ -224,6 +275,10 @@ public class ConcesionarioControlador {
         listadoClientes.add(new ClienteDTO("1111111A", "Pedro González Vázquez", 894586210));
         listadoClientes.add(new ClienteDTO("22222222B", "Iván Fernández López", 567154960));
         return listadoClientes;
+    }
+
+    private List<VentaDTO> cargarVentas() {
+        return new ArrayList<>();
     }
 
 }

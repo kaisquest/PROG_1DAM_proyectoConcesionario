@@ -2,6 +2,9 @@ package Vista;
 
 import Modelo.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.SortedMap;
@@ -9,7 +12,7 @@ import java.util.SortedMap;
 public class VistaSimple {
     public static final int ANHO_RESTA = 1900;
     private Scanner sc = new Scanner(System.in);
-    private TColores listadoColores;
+
 
 
     public TOpciones mostrarMenu() {
@@ -55,6 +58,13 @@ public class VistaSimple {
         }
     }
 
+    public VentaDTO registrarVenta(int idVenta, ClienteDTO cliente, CocheDTO coche, float precioVenta) {
+
+        Date fecha = Date.from(java.time.ZonedDateTime.now().toInstant());
+
+
+        return new VentaDTO(idVenta, cliente, coche, fecha, precioVenta);
+    }
 
     public CocheDTO anhadirCoche() {
 
@@ -157,10 +167,10 @@ public class VistaSimple {
 
     public void mostrarVenta(VentaDTO venta) {
 
-        System.out.println(venta.getIdVenta() + " " + venta.getCliente().getNombre() + " " + venta.getCliente().getDni()
-                + " " + venta.getCoche().getMarca() + " " + venta.getCoche().getModelo() + " " + venta.getCoche().getPrecio()
-                + " " + venta.getCoche().getAnho() + " " + venta.getCoche().getPrecio() + " " + venta.getPrecioVenta()
-                + " " + venta.getFecha());
+        System.out.println("ID " + venta.getIdVenta() + " " + venta.getCliente().getNombre() + " " + venta.getCliente().getDni()
+                + " " + venta.getCoche().getMarca() + " " + venta.getCoche().getModelo() + " " + venta.getCoche().getPrecio() +"€"
+                + " " + venta.getCoche().getAnho() + " " + venta.getCoche().getPrecio() + " " + "precio final de venta " +
+                venta.getPrecioVenta() + "€" + " " + venta.getFecha());
 
 
     }
