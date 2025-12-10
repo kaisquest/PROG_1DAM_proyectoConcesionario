@@ -47,7 +47,7 @@ public class ConcesionarioControlador {
                         mostrarCoches(busquedaRangoPrecio(vista.pedirFloat("Introduce un precio en €.")));
                     }
                     if (opcionesMenu == TOpcionesMenu.ANHO) {
-                        mostrarCoches(busquedaAnho(vista.pedirAnhoFecha("Introduce el año del coche.")));
+                        mostrarCoches(busquedaAnho(vista.pedirInt("Introduce el año del coche.")));
                     }
                     if (opcionesMenu == TOpcionesMenu.SALIR) {
                         break;
@@ -68,6 +68,7 @@ public class ConcesionarioControlador {
                 ClienteDTO nuevoCliente = vista.registrarCliente();
                 if (comprobarDni(nuevoCliente)) {
                     vista.imprimirMensaje("El cliente ya existe en la base de datos.", TColores.RED);
+
                 } else {
                     registrarUnCliente(nuevoCliente);
                     vista.pulsaParaContinuar();
@@ -80,9 +81,31 @@ public class ConcesionarioControlador {
                 }
                 vista.imprimirMensaje("Por favor, introduce los datos de la venta", TColores.GREEN);
                 contadorVentas++;
-                VentaDTO nuevaVenta = vista.registrarVenta((contadorVentas), busquedaCliente(vista.pedirCadena("Introduce el DNI del cliente.")),
-                        busquedaMatricula(vista.pedirCadena("Introduce la matrícula del coche")),
-                        calcularTotal(vista.pedirFloat("Introduce el precio de venta")));
+
+
+                String dni = vista.pedirCadena("Introduce el DNI del cliente.");
+                ClienteDTO clienteBusqueda = busquedaCliente(dni);
+                int comprobar = comprobarClienteExiste(clienteBusqueda);
+                if (comprobar == -1) {
+                    continue;
+                }
+                if (comprobar == 1) {
+                    clienteBusqueda = busquedaCliente(dni);
+                }
+
+
+                String matricula = vista.pedirCadena("Introduce la matrícula del coche");
+                CocheDTO cocheBusqueda = busquedaMatricula(matricula);
+
+                float precio = calcularTotal(vista.pedirFloat("Introduce el precio de venta"));
+                VentaDTO nuevaVenta = vista.registrarVenta(contadorVentas, clienteBusqueda, cocheBusqueda, precio);
+
+
+                //VentaDTO nuevaVenta = vista.registrarVenta((contadorVentas), busquedaCliente(vista.pedirCadena("Introduce el DNI del cliente.")),
+                //        busquedaMatricula(vista.pedirCadena("Introduce la matrícula del coche")),
+                //        calcularTotal(vista.pedirFloat("Introduce el precio de venta")));
+
+
                 registrarVenta(nuevaVenta);
 
 
@@ -100,6 +123,29 @@ public class ConcesionarioControlador {
         }
 
     }
+
+    /**
+     *
+     * @param clienteBusqueda
+     * @return 0 si el cliente existia en el sistema, -1 si no existia y no se ha creado y 1 si no existia y se ha crado
+     */
+    private int comprobarClienteExiste(ClienteDTO clienteBusqueda) {
+        if (clienteBusqueda == null) {
+            vista.imprimirMensaje("El cliente no existe en la base de datos", TColores.RED);
+            TOpcionesRegistro opcionesRegistro = vista.menuOpcionesRegistro();
+
+            if (opcionesRegistro == TOpcionesRegistro.SI) {
+                registrarUnCliente(vista.registrarCliente());
+                return 1;
+            }
+            if (opcionesRegistro == TOpcionesRegistro.NO) {
+                return -1;
+            }
+
+        }
+        return 0;
+    }
+
 
     private float calcularTotal(float precioInicial) {
 
@@ -159,7 +205,7 @@ public class ConcesionarioControlador {
         List<CocheDTO> listadoOcurrencias = new ArrayList<>();
         cnt = CNT_ORIGIN;
         for (CocheDTO coche : listadoCoches) {
-            if (coche.getAnho().getYear() == anhoBusqueda) {
+            if (coche.getAnho() == anhoBusqueda) {
                 listadoOcurrencias.add(coche);
                 cnt++;
             }
@@ -259,12 +305,12 @@ public class ConcesionarioControlador {
 
     private List<CocheDTO> cargaCoches() {
         List<CocheDTO> listadoCoches = new ArrayList<>();
-        listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "1078 BDG", 1365.0f, new Date(100, 01, 01), 186000.0f));
-        listadoCoches.add(new CocheDTO("Toyota", "Corolla", "1234 ABC", 18500.00f, new Date(118, 4, 15), 45000.0f));
-        listadoCoches.add(new CocheDTO("BMW", "Serie 3", "5678 XYZ", 32500.00f, new Date(121, 8, 10), 0000.0f));
-        listadoCoches.add(new CocheDTO("Volkswagen", "Tiguan", "9012 DEF", 28900.0f, new Date(119, 11, 20), 2000.0f));
-        listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "3456 GHI", 12500.00f, new Date(116, 1, 5), 68000.0f));
-        listadoCoches.add(new CocheDTO("Suzuki", "Swift", "0501 SW", 1500.0f, new Date(98, 01, 01), 186000.0f));
+        listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "1078 BDG", 1365.0f, 2000, 186000.0f));
+        listadoCoches.add(new CocheDTO("Toyota", "Corolla", "1234 ABC", 18500.00f, 2018, 45000.0f));
+        listadoCoches.add(new CocheDTO("BMW", "Serie 3", "5678 XYZ", 32500.00f, 2021, 0000.0f));
+        listadoCoches.add(new CocheDTO("Volkswagen", "Tiguan", "9012 DEF", 28900.0f, 2019, 2000.0f));
+        listadoCoches.add(new CocheDTO("SEAT", "IBIZA", "3456 GHI", 12500.00f, 2016, 68000.0f));
+        listadoCoches.add(new CocheDTO("Suzuki", "Swift", "0501 SW", 1500.0f, 1998, 186000.0f));
 
         return listadoCoches;
 

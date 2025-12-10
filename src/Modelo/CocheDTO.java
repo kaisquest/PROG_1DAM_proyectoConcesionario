@@ -7,16 +7,18 @@ public class CocheDTO {
     private String modelo;
     private String matricula;
     private float precio;
-    private Date anho;
+    private int anho;
     private float kilometros;
+    private boolean vendido;
 
-    public CocheDTO(String marca, String modelo, String matricula, float precio, Date anho, float kilometros) {
+    public CocheDTO(String marca, String modelo, String matricula, float precio, int anho, float kilometros) {
         this.marca = marca;
         this.modelo = modelo;
         this.matricula = matricula;
         this.precio = precio;
         this.anho = anho;
         this.kilometros = kilometros;
+        this.vendido = false;
     }
 
     public String getMarca() {
@@ -51,11 +53,11 @@ public class CocheDTO {
         this.precio = precio;
     }
 
-    public Date getAnho() {
+    public int getAnho() {
         return anho;
     }
 
-    public void setAnho(Date anho) {
+    public void setAnho(int anho) {
         this.anho = anho;
     }
 
@@ -65,5 +67,13 @@ public class CocheDTO {
 
     public void setKilometros(float kilometros) {
         this.kilometros = kilometros;
+    }
+
+    public boolean isVendido() {
+        return vendido;
+    }
+
+    public void setVendido(boolean vendido) {
+        this.vendido = vendido;
     }
 }

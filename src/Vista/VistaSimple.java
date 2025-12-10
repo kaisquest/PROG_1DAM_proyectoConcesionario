@@ -10,9 +10,7 @@ import java.util.Scanner;
 import java.util.SortedMap;
 
 public class VistaSimple {
-    public static final int ANHO_RESTA = 1900;
     private Scanner sc = new Scanner(System.in);
-
 
 
     public TOpciones mostrarMenu() {
@@ -58,6 +56,25 @@ public class VistaSimple {
         }
     }
 
+    public TOpcionesRegistro menuOpcionesRegistro() {
+        imprimirSeparador("=");
+        imprimirMensaje("¿Deseas crear un nuevo cliente?", TColores.GREEN);
+        TOpcionesRegistro[] opcionesMenu = TOpcionesRegistro.values();
+        for (int i = 0; i < opcionesMenu.length; i++) {
+            System.out.println((i + 1) + ". " + opcionesMenu[i].getOpText());
+        }
+        imprimirSeparador("=");
+        int opUsuario;
+        while (true) {
+            opUsuario = sc.nextInt();
+            sc.nextLine();
+            if (opUsuario >= 1 && opUsuario <= opcionesMenu.length) {
+                return opcionesMenu[opUsuario - 1];
+            }
+            imprimirMensaje("Opción no válida. Por favor, introduzca una opción válida", TColores.RED);
+        }
+    }
+
     public VentaDTO registrarVenta(int idVenta, ClienteDTO cliente, CocheDTO coche, float precioVenta) {
 
         Date fecha = Date.from(java.time.ZonedDateTime.now().toInstant());
@@ -68,25 +85,21 @@ public class VistaSimple {
 
     public CocheDTO anhadirCoche() {
 
-        try {
-            imprimirMensaje("Por favor, introduce los datos del coche a registrar", TColores.GREEN);
-            String marca = pedirCadena("Introduce marca:");
-            String modelo = pedirCadena("Introduce modelo:");
-            String matricula = pedirCadena("Introduce matrícula:");
-            float precio = pedirFloat("Introduce el precio:");
-            int anhoUsuario = (pedirInt("Introduce el año:") - ANHO_RESTA);
-            int mes = pedirInt("Introduce el numero de mes:");
-            int dia = pedirInt("Introduce el día:");
-            Date anho = new Date(anhoUsuario, mes, dia);
 
-            float kilometros = pedirFloat("Introduce los kilómetros:");
-            return new CocheDTO(marca, modelo, matricula, precio, anho, kilometros);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        imprimirMensaje("Por favor, introduce los datos del coche a registrar", TColores.GREEN);
+        String marca = pedirCadena("Introduce marca:");
+        String modelo = pedirCadena("Introduce modelo:");
+        String matricula = pedirCadena("Introduce matrícula:");
+        float precio = pedirFloat("Introduce el precio:");
+        int anhoUsuario = (pedirInt("Introduce el año:"));
+        int mes = pedirInt("Introduce el numero de mes:");
+        int dia = pedirInt("Introduce el día:");
 
 
+        float kilometros = pedirFloat("Introduce los kilómetros:");
+        return new CocheDTO(marca, modelo, matricula, precio, anhoUsuario, kilometros);
     }
+
 
     public ClienteDTO registrarCliente() {
         imprimirMensaje("Por favor, introduce los datos del cliente a registrar", TColores.GREEN);
@@ -108,53 +121,47 @@ public class VistaSimple {
 
     public String pedirCadena(String mensaje) {
 
-        try {
-            System.out.println(mensaje);
-            return sc.nextLine();
-        } catch (Exception e) {
-            System.err.println("Sólo se admiten cadenas de texto");
-            throw new RuntimeException(e);
+
+        while (true) {
+            try {
+                System.out.println(mensaje);
+                return sc.nextLine();
+            } catch (Exception e) {
+                System.err.println("Sólo se admiten cadenas de texto");
+
+            }
         }
 
 
     }
 
     public float pedirFloat(String mensaje) {
+        while (true) {
+            try {
+                System.out.println(mensaje);
+                float opcion = sc.nextFloat();
+                sc.nextLine();
+                return opcion;
+            } catch (Exception e) {
+                System.out.println("Sólo se admiten números en coma flotante");
 
-        try {
-            System.out.println(mensaje);
-            float opcion = sc.nextFloat();
-            sc.nextLine();
-            return (opcion + 0.0f);
-        } catch (Exception e) {
-            System.out.println("Sólo se admiten números en coma flotante");
-            throw new RuntimeException(e);
+            }
         }
 
 
-    }
-
-    public int pedirAnhoFecha(String mensaje) {
-        try {
-            System.out.println(mensaje);
-            int opcion = sc.nextInt();
-            sc.nextLine();
-            return (opcion - ANHO_RESTA);
-        } catch (Exception e) {
-            System.out.println("Sólo se admiten números enteros");
-            throw new RuntimeException(e);
-        }
     }
 
     public int pedirInt(String mensaje) {
-        try {
-            System.out.println(mensaje);
-            int opcion = sc.nextInt();
-            sc.nextLine();
-            return opcion;
-        } catch (Exception e) {
-            System.out.println("Sólo se admiten números enteros");
-            throw new RuntimeException(e);
+        while (true) {
+            try {
+                System.out.println(mensaje);
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                return opcion;
+            } catch (Exception e) {
+                System.out.println("Sólo se admiten números enteros");
+
+            }
         }
     }
 
@@ -168,7 +175,7 @@ public class VistaSimple {
     public void mostrarVenta(VentaDTO venta) {
 
         System.out.println("ID " + venta.getIdVenta() + " " + venta.getCliente().getNombre() + " " + venta.getCliente().getDni()
-                + " " + venta.getCoche().getMarca() + " " + venta.getCoche().getModelo() + " " + venta.getCoche().getPrecio() +"€"
+                + " " + venta.getCoche().getMarca() + " " + venta.getCoche().getModelo() + " " + venta.getCoche().getPrecio() + "€"
                 + " " + venta.getCoche().getAnho() + " " + venta.getCoche().getPrecio() + " " + "precio final de venta " +
                 venta.getPrecioVenta() + "€" + " " + venta.getFecha());
 
