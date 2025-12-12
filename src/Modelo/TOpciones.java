@@ -12,6 +12,8 @@ public enum TOpciones {
     LISTAR_CLIENTES("Mostrar el listado de clientes registrados."),
     REGISTRAR_VENTA("Registrar una nueva venta."),
     LISTAR_VENTAS("Mostrar las ventas."),
+    CREAR_VENDEDOR("Registra un nuevo vendedor."),
+    LISTAR_VENDEDORES("Mostrar el listado de todos los vendedores."),
 
     SALIR("Salir del programa.");
 

@@ -4,17 +4,19 @@ import java.util.Date;
 
 public class VentaDTO {
     private int idVenta;
+    private VendedorDTO vendedor;
     private ClienteDTO cliente;
     private CocheDTO coche;
     private Date fecha;
     private float precioVenta;
 
-    public VentaDTO(int idVenta, ClienteDTO cliente, CocheDTO coche, Date fecha, float precioVenta) {
+    public VentaDTO(int idVenta, ClienteDTO cliente, CocheDTO coche, Date fecha, float precioVenta, VendedorDTO vendedor) {
         this.idVenta = idVenta;
         this.cliente = cliente;
         this.coche = coche;
         this.fecha = fecha;
         this.precioVenta = precioVenta;
+        this.vendedor = vendedor;
     }
 
     public int getIdVenta() {

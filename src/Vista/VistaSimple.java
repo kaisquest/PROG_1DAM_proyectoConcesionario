@@ -5,10 +5,10 @@ import Modelo.*;
 import java.util.Date;
 import java.util.Scanner;
 
-public class VistaSimple {
+public class VistaSimple implements IVistaInterfaz {
     private Scanner sc = new Scanner(System.in);
 
-
+    @Override
     public TOpciones mostrarMenu() {
         imprimirSeparador("=");
         TOpciones[] opciones = TOpciones.values();
@@ -33,6 +33,7 @@ public class VistaSimple {
     }
 
 
+    @Override
     public TOpcionesMenu menuOpcionesBusqueda() {
         imprimirSeparador("=");
         imprimirMensaje("Escoge el método de búsqueda", TColores.GREEN);
@@ -52,6 +53,7 @@ public class VistaSimple {
         }
     }
 
+    @Override
     public TOpcionesRegistro menuOpcionesRegistro(String mensaje) {
         imprimirSeparador("=");
         imprimirMensaje(mensaje, TColores.GREEN);
@@ -71,14 +73,16 @@ public class VistaSimple {
         }
     }
 
-    public VentaDTO registrarVenta(int idVenta, ClienteDTO cliente, CocheDTO coche, float precioVenta) {
+    @Override
+    public VentaDTO registrarVenta(int idVenta, ClienteDTO cliente, CocheDTO coche, float precioVenta, VendedorDTO vendedor) {
 
         Date fecha = Date.from(java.time.ZonedDateTime.now().toInstant());
 
 
-        return new VentaDTO(idVenta, cliente, coche, fecha, precioVenta);
+        return new VentaDTO(idVenta, cliente, coche, fecha, precioVenta, vendedor);
     }
 
+    @Override
     public CocheDTO anhadirCoche() {
 
 
@@ -97,6 +101,7 @@ public class VistaSimple {
     }
 
 
+    @Override
     public ClienteDTO registrarCliente() {
         imprimirMensaje("Por favor, introduce los datos del cliente a registrar", TColores.GREEN);
         String dni = pedirCadena("Introduce el dni del cliente:");
@@ -115,6 +120,21 @@ public class VistaSimple {
         return new ClienteDTO(dni, nombre, telefono);
     }
 
+    @Override
+    public VendedorDTO registrarVendedor(int numeroVendedor) {
+
+        imprimirMensaje("Por favor, introduce los datos del cliente a registrar", TColores.GREEN);
+        String dni = pedirCadena("Introduce el dni del vendedor:");
+        if (dni.length() != 9) {
+            imprimirMensaje("El dni debe tener una longitud de 8 números y un caracter.", TColores.RED);
+            dni = pedirCadena("Introduce el dni del vendedor:");
+        }
+        String nombre = pedirCadena("Introduce el nombre del cliente:");
+
+        return new VendedorDTO(nombre,numeroVendedor,dni);
+    }
+
+    @Override
     public String pedirCadena(String mensaje) {
 
 
@@ -131,6 +151,7 @@ public class VistaSimple {
 
     }
 
+    @Override
     public float pedirFloat(String mensaje) {
         while (true) {
             try {
@@ -147,6 +168,7 @@ public class VistaSimple {
 
     }
 
+    @Override
     public int pedirInt(String mensaje) {
         while (true) {
             try {
@@ -161,6 +183,7 @@ public class VistaSimple {
         }
     }
 
+    @Override
     public void mostrarCoche(CocheDTO coche) {
         System.out.println(coche.getMarca() + " " + coche.getModelo() + " " + coche.getMatricula() + " "
                 + coche.getAnho() + " " + (coche.getKilometros() + "Km.") + " " + (coche.getPrecio()) + "€");
@@ -168,43 +191,56 @@ public class VistaSimple {
 
     }
 
+    @Override
     public void mostrarVenta(VentaDTO venta) {
 
         System.out.println("ID " + venta.getIdVenta() + " " + venta.getCliente().getNombre() + " " + venta.getCliente().getDni()
                 + " " + venta.getCoche().getMarca() + " " + venta.getCoche().getModelo() + " " + venta.getCoche().getPrecio() + "€"
-                + " " + venta.getCoche().getAnho() + " " + venta.getCoche().getPrecio() + " " + "precio final de venta " +
+                + " " + venta.getCoche().getAnho() + " " + "precio final de venta " +
                 venta.getPrecioVenta() + "€" + " " + venta.getFecha());
 
 
     }
 
+    @Override
+    public void mostrarVendedor(VendedorDTO vendedor) {
+        System.out.printf("Número de vendedor " + vendedor.getNumeroVendedor() + "Nombre " + vendedor.getNombre());
+
+    }
+
+    @Override
     public void mostrarCliente(ClienteDTO cliente) {
 
         System.out.println(cliente.getNombre() + " " + cliente.getDni() + " " + cliente.getTelefono());
 
     }
 
-    private void imprimirSeparador(String mensaje) {
+    @Override
+    public void imprimirSeparador(String mensaje) {
         System.out.println("\n" + "======================" + mensaje + "==========================="
                 + "\n");
     }
 
+    @Override
     public void imprimirMensaje(String mensaje, TColores color) {
         System.out.println(color.getColor() + mensaje + TColores.RESET.getColor());
 
     }
 
+    @Override
     public void mostrarMensajeSalida() {
         System.out.println("Gracias por usar nuestro sistema." +
                 "\n¡Hasta la próxima!");
         imprimirSeparador(" ;) ");
     }
 
+    @Override
     public void pulsaParaContinuar() {
         System.out.println("Pulsa una tecla para continuar.");
         sc.nextLine();
     }
 
+    @Override
     public void imprimirLogo() {
         System.out.println("                                                                                                     \n" +
                 "                                                                                                                        \n" +
