@@ -73,6 +73,26 @@ public class VistaSimple implements IVistaInterfaz {
         }
     }
 
+   @Override
+   public TOpcionesVendedor menuOpcionesVendedor(String mensaje) {
+        imprimirSeparador("=");
+        imprimirMensaje(mensaje, TColores.GREEN);
+        TOpcionesVendedor[] opcionesMenu = TOpcionesVendedor.values();
+        for (int i = 0; i < opcionesMenu.length; i++) {
+            System.out.println((i + 1) + ". " + opcionesMenu[i].getOpText());
+        }
+        imprimirSeparador("=");
+        int opUsuario;
+        while (true) {
+            opUsuario = sc.nextInt();
+            sc.nextLine();
+            if (opUsuario >= 1 && opUsuario <= opcionesMenu.length) {
+                return opcionesMenu[opUsuario - 1];
+            }
+            imprimirMensaje("Opción no válida. Por favor, introduzca una opción válida", TColores.RED);
+        }
+    }
+
     @Override
     public VentaDTO registrarVenta(int idVenta, ClienteDTO cliente, CocheDTO coche, float precioVenta, VendedorDTO vendedor) {
 
@@ -87,13 +107,11 @@ public class VistaSimple implements IVistaInterfaz {
 
 
         imprimirMensaje("Por favor, introduce los datos del coche a registrar", TColores.GREEN);
-        String marca = pedirCadena("Introduce marca:");
-        String modelo = pedirCadena("Introduce modelo:");
-        String matricula = pedirCadena("Introduce matrícula:");
+        String marca = pedirCadena("Introduce marca:", false);
+        String modelo = pedirCadena("Introduce modelo:", false);
+        String matricula = pedirCadena("Introduce matrícula:", false);
         float precio = pedirFloat("Introduce el precio:");
         int anhoUsuario = (pedirInt("Introduce el año:"));
-        int mes = pedirInt("Introduce el numero de mes:");
-        int dia = pedirInt("Introduce el día:");
 
 
         float kilometros = pedirFloat("Introduce los kilómetros:");
@@ -104,16 +122,16 @@ public class VistaSimple implements IVistaInterfaz {
     @Override
     public ClienteDTO registrarCliente() {
         imprimirMensaje("Por favor, introduce los datos del cliente a registrar", TColores.GREEN);
-        String dni = pedirCadena("Introduce el dni del cliente:");
+        String dni = pedirCadena("Introduce el dni del cliente:", false);
         if (dni.length() != 9) {
             imprimirMensaje("El dni debe tener una longitud de 8 números y un caracter.", TColores.RED);
-            dni = pedirCadena("Introduce el dni del cliente:");
+            dni = pedirCadena("Introduce el dni del cliente:", false);
         }
-        String nombre = pedirCadena("Introduce el nombre del cliente:");
+        String nombre = pedirCadena("Introduce el nombre del cliente:", false);
         int telefono = pedirInt("Introduce el teléfono del cliente:");
         if (telefono == 9) {
             imprimirMensaje("El teléfono sólo puede contener 9 números. No se admiten prefijos.", TColores.RED);
-            dni = pedirCadena("Introduce el teléfono del cliente:");
+            telefono = pedirInt("Introduce el teléfono del cliente:");
         }
 
 
@@ -123,32 +141,44 @@ public class VistaSimple implements IVistaInterfaz {
     @Override
     public VendedorDTO registrarVendedor(int numeroVendedor) {
 
-        imprimirMensaje("Por favor, introduce los datos del cliente a registrar", TColores.GREEN);
-        String dni = pedirCadena("Introduce el dni del vendedor:");
+        imprimirMensaje("Por favor, introduce los datos del vendedor a registrar", TColores.GREEN);
+        String dni = pedirCadena("Introduce el dni del vendedor:", false);
         if (dni.length() != 9) {
             imprimirMensaje("El dni debe tener una longitud de 8 números y un caracter.", TColores.RED);
-            dni = pedirCadena("Introduce el dni del vendedor:");
+            dni = pedirCadena("Introduce el dni del vendedor:", false);
         }
-        String nombre = pedirCadena("Introduce el nombre del cliente:");
+        String nombre = pedirCadena("Introduce el nombre del vendedor:", false);
 
-        return new VendedorDTO(nombre,numeroVendedor,dni);
+        return new VendedorDTO(nombre, numeroVendedor, dni);
     }
 
     @Override
-    public String pedirCadena(String mensaje) {
+    public String pedirCadena(String mensaje, boolean permiteVacio) {
 
-
+        String cadena = "";
         while (true) {
+
             try {
                 System.out.println(mensaje);
-                return sc.nextLine();
+
+                cadena = sc.nextLine();
+
+                if((cadena.isBlank() && permiteVacio)){
+                    break;
+                }
+
+                if(!cadena.isBlank()){
+                    break;
+                }
+                imprimirMensaje("La cadena de texto no puede estar vacía.",TColores.RED);
             } catch (Exception e) {
                 System.err.println("Sólo se admiten cadenas de texto");
+                sc.nextLine();
 
             }
         }
 
-
+        return cadena;
     }
 
     @Override
@@ -161,6 +191,7 @@ public class VistaSimple implements IVistaInterfaz {
                 return opcion;
             } catch (Exception e) {
                 System.out.println("Sólo se admiten números en coma flotante");
+                sc.nextLine();
 
             }
         }
@@ -178,6 +209,7 @@ public class VistaSimple implements IVistaInterfaz {
                 return opcion;
             } catch (Exception e) {
                 System.out.println("Sólo se admiten números enteros");
+                sc.nextLine();
 
             }
         }

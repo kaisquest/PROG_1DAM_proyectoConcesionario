@@ -11,6 +11,8 @@ public interface IControlador {
      */
     void run();
 
+    void registrarUnVendedor(VendedorDTO nuevoVendedor);
+
     /**
      * Añade un coche a la lista de coches.
      * @param nuevoCoche el objeto {@link CocheDTO} que contiene el nuevo coche a añadir.
@@ -38,12 +40,18 @@ public interface IControlador {
      */
     List<CocheDTO> busquedaAnho(int anhoBusqueda);
 
+    void registrarVenta();
+
+    VendedorDTO busquedaVendedor(int id);
+
     /**
      * Busca un coche concreto.
      * @param matricula {@link String} la matrícula que se busca.
      * @return Un coche coincidente.
      */
     CocheDTO busquedaMatricula(String matricula);
+
+    void ordenarCoches();
 
     /**
      * Busca coches en base a unos requerimientos de entrada
@@ -86,6 +94,8 @@ public interface IControlador {
      */
     boolean comprobarDni(ClienteDTO clienteAComprobar);
 
+    void mostrarVendedores(List<VendedorDTO> lista);
+
     /**
      * Registra y añade una venta.
      * @param venta {@link VentaDTO} la venta a registrar.
@@ -97,6 +107,9 @@ public interface IControlador {
      * @param lista {@link List} la lista de ventas a mostrar.
      */
     void mostrarVentas(List<VentaDTO> lista);
+
+
+    boolean comprobarDni(VendedorDTO vendedorAComprobar);
 
 
 }

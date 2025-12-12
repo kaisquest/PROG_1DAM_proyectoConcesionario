@@ -2,11 +2,8 @@ package Controlador;
 
 import Modelo.*;
 import Vista.IVistaInterfaz;
-import Vista.VistaSimple;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ConcesionarioControlador implements IControlador {
 
@@ -44,7 +41,7 @@ public class ConcesionarioControlador implements IControlador {
                 while (true) {
                     TOpcionesMenu opcionesMenu = vista.menuOpcionesBusqueda();
                     if (opcionesMenu == TOpcionesMenu.MARCA) {
-                        mostrarCoches(busquedaMarca(vista.pedirCadena("Introduce la marca de coche.")));
+                        mostrarCoches(busquedaMarca(vista.pedirCadena("Introduce la marca de coche.", false)));
                         vista.menuOpcionesBusqueda();
 
                     }
@@ -61,9 +58,10 @@ public class ConcesionarioControlador implements IControlador {
                 }
             }
             if (opciones == TOpciones.BUSQUEDA_COMPLEJA) {
-                mostrarCoches(busquedaCompleja((vista.pedirCadena("Introduce la marca de coche.")),
+                mostrarCoches(busquedaCompleja((vista.pedirCadena("Introduce la marca de coche.", false)),
                         (vista.pedirInt("Introduce el año del coche.")),
                         (vista.pedirFloat("Introduce un precio en €."))));
+
                 vista.pulsaParaContinuar();
 
             }
@@ -73,6 +71,7 @@ public class ConcesionarioControlador implements IControlador {
                 vista.pulsaParaContinuar();
 
             }
+
             if (opciones == TOpciones.MOSTRAR_COCHES) {
                 mostrarCoches(listadoCoches);
                 vista.pulsaParaContinuar();
@@ -81,6 +80,7 @@ public class ConcesionarioControlador implements IControlador {
                 ordenarCoches();
                 vista.pulsaParaContinuar();
             }
+
             if (opciones == TOpciones.REGISTRAR_CLIENTE) {
                 ClienteDTO nuevoCliente = vista.registrarCliente();
                 if (comprobarDni(nuevoCliente)) {
@@ -94,49 +94,7 @@ public class ConcesionarioControlador implements IControlador {
             }
             if (opciones == TOpciones.REGISTRAR_VENTA) {
 
-                //Preguntar cómo extraer esto
-                vista.imprimirMensaje("Por favor, introduce los datos de la venta", TColores.GREEN);
-
-
-                String dni = vista.pedirCadena("Introduce el DNI del cliente.");
-                ClienteDTO clienteBusqueda = busquedaCliente(dni);
-                int comprobar = comprobarClienteExiste(clienteBusqueda);
-                if (comprobar == -1) {
-                    continue;
-                }
-                if (comprobar == 1) {
-                    clienteBusqueda = busquedaCliente(dni);
-                }
-
-
-                String matricula = vista.pedirCadena("Introduce la matrícula del coche");
-                CocheDTO cocheBusqueda = busquedaMatricula(matricula);
-                ;
-
-                if (!comprobarMatriculaExiste(cocheBusqueda)) {
-                    continue;
-                }
-                if (!comprobarVendido(cocheBusqueda)) {
-                    continue;
-                }
-
-
-                float precio = calcularTotal(vista.pedirFloat("Introduce el precio de venta"));
-
-                String id = vista.pedirCadena("Introduce el ID del vendedor.");
-                VendedorDTO vendedorBusqueda = busquedaId(id);
-
-                VentaDTO nuevaVenta = vista.registrarVenta(contadorVentas, clienteBusqueda, cocheBusqueda, precio);
-
-
-                //VentaDTO nuevaVenta = vista.registrarVenta((contadorVentas), busquedaCliente(vista.pedirCadena("Introduce el DNI del cliente.")),
-                //        busquedaMatricula(vista.pedirCadena("Introduce la matrícula del coche")),
-                //        calcularTotal(vista.pedirFloat("Introduce el precio de venta")));
-
-                contadorVentas++;
-                registrarVenta(nuevaVenta);
-
-
+                registrarVenta();
             }
 
             if (opciones == TOpciones.LISTAR_CLIENTES) {
@@ -145,12 +103,14 @@ public class ConcesionarioControlador implements IControlador {
             }
 
             if (opciones == TOpciones.CREAR_VENDEDOR) {
-                VendedorDTO nuevoVendedor = vista.registrarVendedor();
+                VendedorDTO nuevoVendedor = vista.registrarVendedor(numeroVendedor);
+
                 if (comprobarDni(nuevoVendedor)) {
-                    vista.imprimirMensaje("El cliente ya existe en la base de datos.", TColores.RED);
+                    vista.imprimirMensaje("El vendedor ya existe en la base de datos.", TColores.RED);
 
                 } else {
                     registrarUnVendedor(nuevoVendedor);
+                    numeroVendedor++;
                     vista.pulsaParaContinuar();
                 }
 
@@ -159,6 +119,25 @@ public class ConcesionarioControlador implements IControlador {
             if (opciones == TOpciones.LISTAR_VENDEDORES) {
                 mostrarVendedores(listadoVendedores);
                 vista.pulsaParaContinuar();
+            }
+            if (opciones == TOpciones.ESTADISTICAS_VENDEDOR) {
+                VendedorDTO vendedorMenu = busquedaVendedor(vista.pedirInt("Introduce el número de vendedor"));
+
+                while (true) {
+                    TOpcionesVendedor opcionesMenu = vista.menuOpcionesVendedor("Escoge opción:");
+                    if (opcionesMenu == TOpcionesVendedor.COCHE_CARO) {
+                        mostrarCoches(busquedaMarca(vista.pedirCadena("Introduce la marca de coche.", false)));
+                        vista.menuOpcionesBusqueda();
+
+                    }
+
+                    if (opcionesMenu == TOpcionesVendedor.SALIR) {
+                        break;
+
+                    }
+                }
+
+
             }
 
 
@@ -171,11 +150,68 @@ public class ConcesionarioControlador implements IControlador {
 
     }
 
-    private VendedorDTO busquedaId(String id) {
 
-        
+    @Override
+    public void registrarVenta() {
+        //Preguntar cómo extraer esto
+        vista.imprimirMensaje("Por favor, introduce los datos de la venta", TColores.GREEN);
+
+
+        String dni = vista.pedirCadena("Introduce el DNI del cliente.", false);
+        ClienteDTO clienteBusqueda = busquedaCliente(dni);
+        int comprobar = comprobarClienteExiste(clienteBusqueda);
+        if (comprobar == -1) {
+            return;
+        }
+        if (comprobar == 1) {
+            clienteBusqueda = busquedaCliente(dni);
+        }
+
+
+        String matricula = vista.pedirCadena("Introduce la matrícula del coche", false);
+        CocheDTO cocheBusqueda = busquedaMatricula(matricula);
+
+
+        if (!comprobarMatriculaExiste(cocheBusqueda)) {
+            return;
+        }
+        if (!comprobarVendido(cocheBusqueda)) {
+            return;
+        }
+
+
+        float precio = calcularTotal(vista.pedirFloat("Introduce el precio de venta"));
+
+        int id = vista.pedirInt("Introduce el ID del vendedor.");
+        VendedorDTO vendedorBusqueda = busquedaVendedor(id);
+
+        if (vendedorBusqueda == null) {
+            return;
+        }
+
+
+        VentaDTO nuevaVenta = vista.registrarVenta(contadorVentas, clienteBusqueda, cocheBusqueda, precio, vendedorBusqueda);
+
+
+        //VentaDTO nuevaVenta = vista.registrarVenta((contadorVentas), busquedaCliente(vista.pedirCadena("Introduce el DNI del cliente.")),
+        //        busquedaMatricula(vista.pedirCadena("Introduce la matrícula del coche")),
+        //        calcularTotal(vista.pedirFloat("Introduce el precio de venta")));
+
+        contadorVentas++;
+        registrarVenta(nuevaVenta);
     }
 
+    @Override
+    public VendedorDTO busquedaVendedor(int id) {
+        for (VendedorDTO vendedor : listadoVendedores) {
+            if (vendedor.getNumeroVendedor() == id) {
+                return vendedor;
+            }
+
+
+        }
+        return null;
+    }
 
     @Override
     public CocheDTO busquedaMatricula(String matricula) {
@@ -266,6 +302,7 @@ public class ConcesionarioControlador implements IControlador {
 
     }
 
+    @Override
     public void ordenarCoches() {
         List<CocheDTO> ordenPorMarca = new ArrayList<>();
         List<CocheDTO> listaOrdenada = new ArrayList<>();
@@ -273,6 +310,7 @@ public class ConcesionarioControlador implements IControlador {
         boolean cocheExiste = false;
 
         for (CocheDTO coche : listadoCoches) {
+            String matricula = coche.getMatricula();
             String marca = coche.getMarca();
             int anho = coche.getAnho();
 
@@ -280,7 +318,7 @@ public class ConcesionarioControlador implements IControlador {
 
             } else {
                 for (CocheDTO cocheComprobacion : ordenPorMarca) {
-                    if (marca.equalsIgnoreCase(cocheComprobacion.getMarca())) {
+                    if (matricula.equalsIgnoreCase(cocheComprobacion.getMatricula())) {
                         cocheExiste = true;
 
 
@@ -302,7 +340,7 @@ public class ConcesionarioControlador implements IControlador {
         }
         if (ordenPorMarca == null) {
         } else {
-            for (CocheDTO coche : ordenPorMarca){
+            for (CocheDTO coche : ordenPorMarca) {
                 vista.mostrarCoche(coche);
             }
         }
@@ -310,56 +348,37 @@ public class ConcesionarioControlador implements IControlador {
 
     }
 
-    @Override
-    public List<CocheDTO> busquedaCompleja(String marcaBusqueda, int anhoBusqueda, float rangoPrecio) {
-        List<CocheDTO> marcaCoincidente = busquedaMarca(marcaBusqueda);
-        List<CocheDTO> anhoCoincidente = busquedaAnho(anhoBusqueda);
-        List<CocheDTO> rangoCoincidente = busquedaRangoPrecio(rangoPrecio);
-        List<CocheDTO> listadoOcurrencias = new ArrayList<>();
+    public void ordenarCochesAlfabetico() {
+        List coches = listadoCoches.subList(0, listadoCoches.size() - 1);
 
-        List<CocheDTO> marcaAnho = new ArrayList<>();
-
-
-        for (CocheDTO coche : marcaCoincidente) {
-            String marca = coche.getMarca();
-            int anho = coche.getAnho();
-            for (CocheDTO cocheDTO : anhoCoincidente) {
-                if (marca.equalsIgnoreCase(cocheDTO.getMarca())) {
-                    if (anho == cocheDTO.getAnho()) {
-                        marcaAnho.add(cocheDTO);
-
-
-                    }
-                }
-
+        coches.sort(new Comparator<CocheDTO>() {
+            @Override
+            public int compare(CocheDTO o1, CocheDTO o2) {
+                return o1.getMarca().compareTo(o2.getMarca());
             }
-
-
-        }
-        if (marcaAnho == null) {
-            return null;
-        } else {
-            for (CocheDTO coche : rangoCoincidente) {
-                float precio = coche.getPrecio();
-                for (CocheDTO cocheDTO : marcaAnho) {
-                    if (precio <= cocheDTO.getPrecio()) {
-                        listadoOcurrencias.add(cocheDTO);
-
-
-                    }
-                }
-
-            }
-            if (listadoOcurrencias == null) {
-                return null;
-            } else {
-                return listadoOcurrencias;
-            }
-
-        }
+        });
 
 
     }
+
+    @Override
+    public List<CocheDTO> busquedaCompleja(String marcaBusqueda, int anhoBusqueda, float rangoPrecio) {
+
+        List<CocheDTO> listadoOcurrencias = new ArrayList<>();
+
+
+        for (CocheDTO coche : listadoCoches) {
+            if (coche.getMarca().equalsIgnoreCase(marcaBusqueda) && (coche.getAnho() == anhoBusqueda) && coche.getPrecio() <= rangoPrecio) {
+                listadoOcurrencias.add(coche);
+
+            }
+
+        }
+        return listadoOcurrencias;
+
+
+    }
+
 
     @Override
     public void mostrarCoches(List<CocheDTO> lista) {
@@ -396,6 +415,7 @@ public class ConcesionarioControlador implements IControlador {
         }
     }
 
+    @Override
     public void mostrarVendedores(List<VendedorDTO> lista) {
 
         if (lista == null) {
@@ -413,7 +433,8 @@ public class ConcesionarioControlador implements IControlador {
 
     }
 
-    private void registrarUnVendedor(VendedorDTO nuevoVendedor) {
+    @Override
+    public void registrarUnVendedor(VendedorDTO nuevoVendedor) {
         listadoVendedores.add(nuevoVendedor);
     }
 
@@ -441,9 +462,10 @@ public class ConcesionarioControlador implements IControlador {
         return false;
     }
 
+    @Override
     public boolean comprobarDni(VendedorDTO vendedorAComprobar) {
-        for (ClienteDTO cliente : listadoClientes) {
-            if (cliente.getDni().equals(vendedorAComprobar.getDni())) {
+        for (VendedorDTO vendedor : listadoVendedores) {
+            if (vendedor.getDni().equals(vendedorAComprobar.getDni())) {
                 return true;
             }
 
@@ -462,11 +484,11 @@ public class ConcesionarioControlador implements IControlador {
         this.listadoVentas = cargarVentas();
 
 
-
     }
 
 
     //Funciones privadas
+
 
     /**
      * Comprueba que un cliente exista en la base de datos.
@@ -602,8 +624,8 @@ public class ConcesionarioControlador implements IControlador {
      */
     private List<VentaDTO> cargarVentas() {
         List<VentaDTO> listadoVentas = new ArrayList<>();
-        listadoVentas.add(new VentaDTO(1, listadoClientes.get(1), listadoCoches.get(0), new Date(125, 05, 24), 120,listadoVendedores.get(1)));
-        listadoVentas.add(new VentaDTO(2, listadoClientes.get(0), listadoCoches.get(2), new Date(125, 05, 24), 16000,listadoVendedores.get(2)));
+        listadoVentas.add(new VentaDTO(1, listadoClientes.get(1), listadoCoches.get(0), new Date(125, 05, 24), 120, listadoVendedores.get(1)));
+        listadoVentas.add(new VentaDTO(2, listadoClientes.get(0), listadoCoches.get(2), new Date(125, 05, 24), 16000, listadoVendedores.get(2)));
         return listadoVentas;
     }
 
@@ -612,11 +634,11 @@ public class ConcesionarioControlador implements IControlador {
      *
      * @return la lista de ventas cargada en memoria.
      */
-    private List<VendedorDTO> cargarVendedores(){
+    private List<VendedorDTO> cargarVendedores() {
         List<VendedorDTO> listadoVendedores = new ArrayList<>();
-        listadoVendedores.add(new VendedorDTO("José",0001,"555555668A"));
-        listadoVendedores.add(new VendedorDTO("Marta",0002,"559455668Z"));
-        listadoVendedores.add(new VendedorDTO("Julia",0003,"659555668F"));
+        listadoVendedores.add(new VendedorDTO("José", 0001, "555555668A"));
+        listadoVendedores.add(new VendedorDTO("Marta", 0002, "559455668Z"));
+        listadoVendedores.add(new VendedorDTO("Julia", 0003, "659555668F"));
 
         return listadoVendedores;
     }

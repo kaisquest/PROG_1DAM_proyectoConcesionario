@@ -8,14 +8,14 @@ public class VendedorDTO {
     private int numeroVendedor;
     private String nombre;
     private String dni;
-    private List<VentaDTO> ventasRealizadas;
+
 
 
     public VendedorDTO(String nombre, int numeroVendedor, String dni) {
         this.nombre = nombre;
         this.numeroVendedor = numeroVendedor;
         this.dni = dni;
-        List<VentaDTO> ventasRealizadas = new ArrayList<>();
+
 
     }
 
@@ -35,13 +35,6 @@ public class VendedorDTO {
         this.nombre = nombre;
     }
 
-    public List<VentaDTO> getVentasRealizadas() {
-        return ventasRealizadas;
-    }
-
-    public void setVentasRealizadas(List<VentaDTO> ventasRealizadas) {
-        this.ventasRealizadas = ventasRealizadas;
-    }
 
     public String getDni() {
         return dni;

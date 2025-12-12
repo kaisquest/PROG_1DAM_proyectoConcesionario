@@ -22,6 +22,8 @@ public interface IVistaInterfaz {
      */
     TOpcionesRegistro menuOpcionesRegistro(String mensaje);
 
+    TOpcionesVendedor menuOpcionesVendedor(String mensaje);
+
     /**
      * Pide los datos al usuario para crear una venta.
      * @param idVenta {@link Integer} el número de la venta que se va a registrar.
@@ -51,7 +53,7 @@ public interface IVistaInterfaz {
      * @param mensaje {@link String} mensaje personalizado para el usuario.
      * @return la cadena introducida por el usuario.
      */
-    String pedirCadena(String mensaje);
+    String pedirCadena(String mensaje, boolean permiteVacio);
 
     /**
      * Pide un número en coma flotante.

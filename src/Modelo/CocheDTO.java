@@ -2,7 +2,10 @@ package Modelo;
 
 import java.util.Date;
 
-public class CocheDTO {
+/**
+ *
+ */
+public class CocheDTO{
     private String marca;
     private String modelo;
     private String matricula;
@@ -76,4 +79,5 @@ public class CocheDTO {
     public void setVendido(boolean vendido) {
         this.vendido = vendido;
     }
+
 }
