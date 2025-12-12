@@ -5,7 +5,9 @@ public enum TOpciones {
 
     ANHADIR_COCHE("Añadir un coche."),
     MOSTRAR_COCHES("Mostrar el listado de coches disponibles."),
+    MOSTRAR_ORDENADOS("Mostrar el listado de coches ordenados."),
     BUSCAR("Buscar un coche por marca, año o rango de precios."),
+    BUSQUEDA_COMPLEJA("Buscar usando filtros avanzados."),
     REGISTRAR_CLIENTE("Registrar un uevo cliente."),
     LISTAR_CLIENTES("Mostrar el listado de clientes registrados."),
     REGISTRAR_VENTA("Registrar una nueva venta."),

@@ -2,12 +2,8 @@ package Vista;
 
 import Modelo.*;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.SortedMap;
 
 public class VistaSimple {
     private Scanner sc = new Scanner(System.in);
@@ -56,9 +52,9 @@ public class VistaSimple {
         }
     }
 
-    public TOpcionesRegistro menuOpcionesRegistro() {
+    public TOpcionesRegistro menuOpcionesRegistro(String mensaje) {
         imprimirSeparador("=");
-        imprimirMensaje("¿Deseas crear un nuevo cliente?", TColores.GREEN);
+        imprimirMensaje(mensaje, TColores.GREEN);
         TOpcionesRegistro[] opcionesMenu = TOpcionesRegistro.values();
         for (int i = 0; i < opcionesMenu.length; i++) {
             System.out.println((i + 1) + ". " + opcionesMenu[i].getOpText());
@@ -104,7 +100,7 @@ public class VistaSimple {
     public ClienteDTO registrarCliente() {
         imprimirMensaje("Por favor, introduce los datos del cliente a registrar", TColores.GREEN);
         String dni = pedirCadena("Introduce el dni del cliente:");
-        if (dni.length() == 9) {
+        if (dni.length() != 9) {
             imprimirMensaje("El dni debe tener una longitud de 8 números y un caracter.", TColores.RED);
             dni = pedirCadena("Introduce el dni del cliente:");
         }
@@ -198,7 +194,7 @@ public class VistaSimple {
 
     }
 
-    public void mensajeSalida() {
+    public void mostrarMensajeSalida() {
         System.out.println("Gracias por usar nuestro sistema." +
                 "\n¡Hasta la próxima!");
         imprimirSeparador(" ;) ");
@@ -207,6 +203,36 @@ public class VistaSimple {
     public void pulsaParaContinuar() {
         System.out.println("Pulsa una tecla para continuar.");
         sc.nextLine();
+    }
+
+    public void imprimirLogo() {
+        System.out.println("                                                                                                     \n" +
+                "                                                                                                                        \n" +
+                "                                                      ...,*//(((/**,,..                                                 \n" +
+                "                                         ,@(..                                 .*&&                                     \n" +
+                "                                       (*                                           %.                                  \n" +
+                "                                     ..                                               &                                 \n" +
+                "                           .&@@@&.  #                                                  ./  #&@@@(                       \n" +
+                "                           *%&&@(##.    *&*                                      .(@     #/*@&&&#                       \n" +
+                "                           ,%, ,@,         (#(//**,,,..              ...,,***/((#,         @&  *%                       \n" +
+                "                         ,       .%                                                      ,#       ,                     \n" +
+                "                        ,            .                                                 ,           ,                    \n" +
+                "                        #@@@@@&%,.                        ..,,,,...                        ./%@@@@@@.                   \n" +
+                "                        /@@@@@@@@@    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%    #@@@@@@@@@                    \n" +
+                "                                    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                \n" +
+                "                                   .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%                               \n" +
+                "                                                                                                                        \n" +
+                "                                                                                                                        \n" +
+                "               %%%(      #&%   *%&    &%%%%%%%     .%@@&/       (&@@#      &%*   #%%      (&@@#.     .%%&%#,            \n" +
+                "              .@@@@      %@&   *@@      .@@*      @@@  *@@*   .@@/ .@@*    @@/   %@@    /@@,  @@@    .&@. %@@           \n" +
+                "              %@(#@&     %@&   *@@      .@@*      @@.   @@%    @@#         @@/   %@@    %@@   .@@.   .&@.  @@*          \n" +
+                "             .@@ .@@.    %@&   *@@      .@@*      @@.   @@%     #@@@/      @@@@@@@@@    %@@   .@@.   .&@,.%@@           \n" +
+                "             %@%  &@%    %@&   *@@      .@@*      @@.   @@%        (@@*    @@/   %@@    %@@   .@@.   .&@@@(             \n" +
+                "            .@@(//(@@.   #@@   (@@      .@@*      @@,   @@#   ,@@   @@(    @@/   %@@    #@@   *@@    .&@.               \n" +
+                "            &@@    @@#    %@@@@@&       .@@*      .&@@@@@#     #@@&@@&     @@/   %@@     #@@@@@&.    .&@.               \n" +
+                "                                                                                                                        \n");
+
+
     }
 
 

@@ -8,5 +8,7 @@ public class Programa {
         ConcesionarioControlador controlador = new ConcesionarioControlador(vista);
         controlador.run();
 
+
+
     }
 }
