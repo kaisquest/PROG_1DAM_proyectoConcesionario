@@ -6,7 +6,7 @@ import Vista.VistaSimple;
 public class Programa {
 
     public static void main(String[] args) {
-        IVistaInterfaz vista = new VistaSimple();
+        IVistaInterfaz vista = new VistaCompleja();
         ConcesionarioControlador controlador = new ConcesionarioControlador(vista);
         controlador.run();
 

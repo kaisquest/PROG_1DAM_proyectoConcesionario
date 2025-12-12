@@ -5,7 +5,7 @@ public enum TOpciones {
 
     ANHADIR_COCHE("Añadir un coche."),
     MOSTRAR_COCHES("Mostrar el listado de coches disponibles."),
-    MOSTRAR_ORDENADOS("Mostrar el listado de coches ordenados."),
+    MOSTRAR_ORDENADOS("Mostrar el menú de tipos de ordenación."),
     BUSCAR("Buscar un coche por marca, año o rango de precios."),
     BUSQUEDA_COMPLEJA("Buscar usando filtros avanzados."),
     REGISTRAR_CLIENTE("Registrar un nuevo cliente."),
@@ -14,7 +14,7 @@ public enum TOpciones {
     LISTAR_VENTAS("Mostrar las ventas."),
     CREAR_VENDEDOR("Registra un nuevo vendedor."),
     LISTAR_VENDEDORES("Mostrar el listado de todos los vendedores."),
-    ESTADISTICAS_VENDEDOR("Muestra el menú de estadíscas de un vendedor."),
+    //ESTADISTICAS_VENDEDOR("Muestra el menú de estadíscas de un vendedor."),
 
     SALIR("Salir del programa.");
 

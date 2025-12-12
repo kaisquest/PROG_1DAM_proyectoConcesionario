@@ -3,6 +3,10 @@ package Modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que guarda un venedor con su Número de vendedor,
+ * su Nombre y su DNI.
+ */
 public class VendedorDTO {
 
     private int numeroVendedor;

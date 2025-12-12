@@ -3,7 +3,8 @@ package Modelo;
 import java.util.Date;
 
 /**
- *
+ *Clase que guarda un coche con su Marca, Modelo, Matrícula
+ * Precio, Año, Kilómetros y si está vendido.
  */
 public class CocheDTO{
     private String marca;

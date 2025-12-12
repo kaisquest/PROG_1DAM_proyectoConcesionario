@@ -35,6 +35,26 @@ public class VistaCompleja implements IVistaInterfaz {
 
     }
 
+    @Override
+    public TOpcionesOrdenar menuOpcionesOrdenar() {
+        imprimirSeparador("=");
+        imprimirMensaje("Escoge el método de ordenación", TColores.GREEN);
+        TOpcionesOrdenar[] opcionesMenu = TOpcionesOrdenar.values();
+        for (int i = 0; i < opcionesMenu.length; i++) {
+            System.out.println((i + 1) + ". " + opcionesMenu[i].getOpText());
+        }
+        imprimirSeparador("=");
+        int opUsuario;
+        while (true) {
+            opUsuario = sc.nextInt();
+            sc.nextLine();
+            if (opUsuario >= 1 && opUsuario <= opcionesMenu.length) {
+                return opcionesMenu[opUsuario - 1];
+            }
+            imprimirMensaje("Opción no válida. Por favor, introduzca una opción válida", TColores.RED);
+        }
+    }
+
 
     @Override
     public TOpcionesMenu menuOpcionesBusqueda() {
@@ -76,25 +96,25 @@ public class VistaCompleja implements IVistaInterfaz {
         }
     }
 
-    @Override
-    public TOpcionesVendedor menuOpcionesVendedor(String mensaje) {
-        imprimirSeparador("=");
-        imprimirMensaje(mensaje, TColores.GREEN);
-        TOpcionesVendedor[] opcionesMenu = TOpcionesVendedor.values();
-        for (int i = 0; i < opcionesMenu.length; i++) {
-            System.out.println((i + 1) + ". " + opcionesMenu[i].getOpText());
-        }
-        imprimirSeparador("=");
-        int opUsuario;
-        while (true) {
-            opUsuario = sc.nextInt();
-            sc.nextLine();
-            if (opUsuario >= 1 && opUsuario <= opcionesMenu.length) {
-                return opcionesMenu[opUsuario - 1];
-            }
-            imprimirMensaje("Opción no válida. Por favor, introduzca una opción válida", TColores.RED);
-        }
-    }
+ // @Override
+ // public TOpcionesVendedor menuOpcionesVendedor(String mensaje) {
+ //     imprimirSeparador("=");
+ //     imprimirMensaje(mensaje, TColores.GREEN);
+ //     TOpcionesVendedor[] opcionesMenu = TOpcionesVendedor.values();
+ //     for (int i = 0; i < opcionesMenu.length; i++) {
+ //         System.out.println((i + 1) + ". " + opcionesMenu[i].getOpText());
+ //     }
+ //     imprimirSeparador("=");
+ //     int opUsuario;
+ //     while (true) {
+ //         opUsuario = sc.nextInt();
+ //         sc.nextLine();
+ //         if (opUsuario >= 1 && opUsuario <= opcionesMenu.length) {
+ //             return opcionesMenu[opUsuario - 1];
+ //         }
+ //         imprimirMensaje("Opción no válida. Por favor, introduzca una opción válida", TColores.RED);
+ //     }
+ // }
 
     @Override
     public VentaDTO registrarVenta(int idVenta, ClienteDTO cliente, CocheDTO coche, float precioVenta, VendedorDTO vendedor) {

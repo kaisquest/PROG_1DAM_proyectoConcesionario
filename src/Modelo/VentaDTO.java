@@ -2,6 +2,10 @@ package Modelo;
 
 import java.util.Date;
 
+/**
+ * Clase que guarda una venta con un ID de Venta, un Vendedor,
+ * un Cliente, un Coche, una Fecha y un Precio de venta.
+ */
 public class VentaDTO {
     private int idVenta;
     private VendedorDTO vendedor;

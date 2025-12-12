@@ -11,6 +11,12 @@ public interface IVistaInterfaz {
     TOpciones mostrarMenu();
 
     /**
+     * Muestra el menú de opciones para ordenar la lista de coches, preguntando al usuario cuál quiere hacer.
+     * @return el número de la opción a realizar
+     */
+    TOpcionesOrdenar menuOpcionesOrdenar();
+
+    /**
      * Muestra el menú de opciones de búsqueda, preguntando al usuario cuál quiere hacer.
      * @return el número de la opción a realizar
      */
@@ -22,7 +28,7 @@ public interface IVistaInterfaz {
      */
     TOpcionesRegistro menuOpcionesRegistro(String mensaje);
 
-    TOpcionesVendedor menuOpcionesVendedor(String mensaje);
+    //TOpcionesVendedor menuOpcionesVendedor(String mensaje);
 
     /**
      * Pide los datos al usuario para crear una venta.
@@ -46,6 +52,11 @@ public interface IVistaInterfaz {
      */
     ClienteDTO registrarCliente();
 
+
+    /**
+     * Pide los datos al usuario para registrar un vendedor.
+     * @return un vendedor.
+     */
     VendedorDTO registrarVendedor(int numeroVendedor);
 
     /**
@@ -81,6 +92,10 @@ public interface IVistaInterfaz {
      */
     void mostrarVenta(VentaDTO venta);
 
+    /**
+     * Muestra un vendedor
+     * @param vendedor {@link VentaDTO} el vendedor a mostrar.
+     */
     void mostrarVendedor(VendedorDTO vendedor);
 
     /**

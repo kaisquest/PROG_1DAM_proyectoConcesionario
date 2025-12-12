@@ -1,5 +1,8 @@
 package Modelo;
 
+/**
+ * Clase que guarda un cliente con su DNI, Nombre y teléfono.
+ */
 public class ClienteDTO {
     private String dni;
     private String nombre;

@@ -58,10 +58,8 @@ public class ConcesionarioControlador implements IControlador {
                 }
             }
             if (opciones == TOpciones.BUSQUEDA_COMPLEJA) {
-                mostrarCoches(busquedaCompleja((vista.pedirCadena("Introduce la marca de coche.", false)),
-                        (vista.pedirInt("Introduce el año del coche.")),
-                        (vista.pedirFloat("Introduce un precio en €."))));
 
+                busquedaPorParametros();
                 vista.pulsaParaContinuar();
 
             }
@@ -77,8 +75,26 @@ public class ConcesionarioControlador implements IControlador {
                 vista.pulsaParaContinuar();
             }
             if (opciones == TOpciones.MOSTRAR_ORDENADOS) {
-                ordenarCoches();
-                vista.pulsaParaContinuar();
+                while (true) {
+                    TOpcionesOrdenar opcionesMenu = vista.menuOpcionesOrdenar();
+                    if (opcionesMenu == TOpcionesOrdenar.MARCA_ORDEN) {
+                        ordenarCochesAlfabetico();
+                        mostrarCoches(listadoCoches);
+
+                    }
+                    if (opcionesMenu == TOpcionesOrdenar.RANGO_ORDEN) {
+                        ordenarCochesPrecio();
+                        mostrarCoches(listadoCoches);
+                    }
+                    if (opcionesMenu == TOpcionesOrdenar.ANHO_ORDEN) {
+                        ordenarCochesAnho();
+                        mostrarCoches(listadoCoches);
+                    }
+                    if (opcionesMenu == TOpcionesOrdenar.SALIR) {
+                        break;
+
+                    }
+                }
             }
 
             if (opciones == TOpciones.REGISTRAR_CLIENTE) {
@@ -120,25 +136,25 @@ public class ConcesionarioControlador implements IControlador {
                 mostrarVendedores(listadoVendedores);
                 vista.pulsaParaContinuar();
             }
-            if (opciones == TOpciones.ESTADISTICAS_VENDEDOR) {
-                VendedorDTO vendedorMenu = busquedaVendedor(vista.pedirInt("Introduce el número de vendedor"));
+         // if (opciones == TOpciones.ESTADISTICAS_VENDEDOR) {
+         //     VendedorDTO vendedorMenu = busquedaVendedor(vista.pedirInt("Introduce el número de vendedor"));
 
-                while (true) {
-                    TOpcionesVendedor opcionesMenu = vista.menuOpcionesVendedor("Escoge opción:");
-                    if (opcionesMenu == TOpcionesVendedor.COCHE_CARO) {
-                        mostrarCoches(busquedaMarca(vista.pedirCadena("Introduce la marca de coche.", false)));
-                        vista.menuOpcionesBusqueda();
+         //     while (true) {
+         //         TOpcionesVendedor opcionesMenu = vista.menuOpcionesVendedor("Escoge opción:");
+         //         if (opcionesMenu == TOpcionesVendedor.COCHE_CARO) {
+         //             mostrarCoches(busquedaMarca(vista.pedirCadena("Introduce la marca de coche.", false)));
+         //             vista.menuOpcionesBusqueda();
 
-                    }
+         //         }
 
-                    if (opcionesMenu == TOpcionesVendedor.SALIR) {
-                        break;
+         //         if (opcionesMenu == TOpcionesVendedor.SALIR) {
+         //             break;
 
-                    }
-                }
+         //         }
+         //     }
 
 
-            }
+         // }
 
 
             if (opciones == TOpciones.SALIR) {
@@ -149,7 +165,6 @@ public class ConcesionarioControlador implements IControlador {
         }
 
     }
-
 
     @Override
     public void registrarVenta() {
@@ -303,51 +318,6 @@ public class ConcesionarioControlador implements IControlador {
     }
 
     @Override
-    public void ordenarCoches() {
-        List<CocheDTO> ordenPorMarca = new ArrayList<>();
-        List<CocheDTO> listaOrdenada = new ArrayList<>();
-
-        boolean cocheExiste = false;
-
-        for (CocheDTO coche : listadoCoches) {
-            String matricula = coche.getMatricula();
-            String marca = coche.getMarca();
-            int anho = coche.getAnho();
-
-            if (ordenPorMarca == null) {
-
-            } else {
-                for (CocheDTO cocheComprobacion : ordenPorMarca) {
-                    if (matricula.equalsIgnoreCase(cocheComprobacion.getMatricula())) {
-                        cocheExiste = true;
-
-
-                    }
-
-                }
-            }
-            if (!cocheExiste) {
-                for (CocheDTO cocheMarca : listadoCoches) {
-                    if (marca.equalsIgnoreCase(cocheMarca.getMarca())) {
-                        ordenPorMarca.add(cocheMarca);
-
-
-                    }
-                }
-            }
-
-
-        }
-        if (ordenPorMarca == null) {
-        } else {
-            for (CocheDTO coche : ordenPorMarca) {
-                vista.mostrarCoche(coche);
-            }
-        }
-
-
-    }
-
     public void ordenarCochesAlfabetico() {
         List coches = listadoCoches.subList(0, listadoCoches.size() - 1);
 
@@ -355,6 +325,34 @@ public class ConcesionarioControlador implements IControlador {
             @Override
             public int compare(CocheDTO o1, CocheDTO o2) {
                 return o1.getMarca().compareTo(o2.getMarca());
+            }
+        });
+
+
+    }
+
+    @Override
+    public void ordenarCochesPrecio() {
+        List coches = listadoCoches.subList(0, listadoCoches.size() - 1);
+
+        coches.sort(new Comparator<CocheDTO>() {
+            @Override
+            public int compare(CocheDTO o1, CocheDTO o2) {
+                return Float.compare(o1.getPrecio(),o2.getPrecio());
+            }
+        });
+
+
+    }
+
+    @Override
+    public void ordenarCochesAnho() {
+        List coches = listadoCoches.subList(0, listadoCoches.size() - 1);
+
+        coches.sort(new Comparator<CocheDTO>() {
+            @Override
+            public int compare(CocheDTO o1, CocheDTO o2) {
+                return Integer.compare(o1.getAnho(), o2.getAnho());
             }
         });
 
@@ -643,6 +641,20 @@ public class ConcesionarioControlador implements IControlador {
         return listadoVendedores;
     }
 
+    /**
+     * Realiza una búsqueda de un coche usando más de un parámetro.
+     */
+    private void busquedaPorParametros() {
+        List<CocheDTO> listaBusqueda = busquedaCompleja((vista.pedirCadena("Introduce la marca de coche.", false)),
+                (vista.pedirInt("Introduce el año del coche.")),
+                (vista.pedirFloat("Introduce un precio en €.")));
+
+        if (listaBusqueda.isEmpty()) {
+            vista.imprimirMensaje("No se encuentra ningún coche con esas características", TColores.RED);
+        } else {
+            mostrarCoches(listaBusqueda);
+        }
+    }
 
     //private int actualizarContador() {
     //    if (listadoVentas == null) {
